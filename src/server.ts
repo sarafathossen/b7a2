@@ -64,7 +64,7 @@ app.post("/api/auth/signup", async (req: Request, res: Response) => {
     }
 
     try {
-        
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const result = await pool.query(`
@@ -75,7 +75,7 @@ app.post("/api/auth/signup", async (req: Request, res: Response) => {
         res.status(201).json({
             success: true,
             message: "User registered successfully",
-            data: result.rows[0] 
+            data: result.rows[0]
         });
     } catch (error: any) {
         res.status(500).json({ success: false, message: error.message, error: error });
@@ -95,7 +95,7 @@ app.post("/api/auth/login", async (req: Request, res: Response) => {
 
         const user = result.rows[0];
 
-        
+
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if (!isPasswordMatch) {
             return res.status(401).json({ success: false, message: "Invalid email or password" });
@@ -132,6 +132,24 @@ const authMiddleware = (req: Request, res: Response, next: any) => {
         return res.status(401).json({ success: false, message: "Invalid or expired token" });
     }
 };
+
+
+app.get('/', async (req: Request, res: Response) => {
+    try {
+        await pool.query('SELECT NOW()');
+        res.status(200).json({
+            success: true,
+            message: "Database Connected Successfully",
+            author: "Next Level"
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: "Database connection failed",
+            error: error.message
+        });
+    }
+});
 
 
 app.post("/api/issues", authMiddleware, async (req: any, res: Response) => {
