@@ -55,7 +55,7 @@ const issueeDB = async () => {
 };
 issueeDB();
 
-// ১. ইউজার রেজিস্ট্রেশন (Bcrypt পাসওয়ার্ড হ্যাশিং সহ)
+
 app.post("/api/auth/signup", async (req: Request, res: Response) => {
     const { name, email, password, role } = req.body;
 
