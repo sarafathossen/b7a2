@@ -64,7 +64,7 @@ app.post("/api/auth/signup", async (req: Request, res: Response) => {
     }
 
     try {
-        // ১০ রাউন্ড সল্ট দিয়ে পাসওয়ার্ড হ্যাশ করা
+        
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const result = await pool.query(`
