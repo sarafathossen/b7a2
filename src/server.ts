@@ -95,7 +95,7 @@ app.post("/api/auth/login", async (req: Request, res: Response) => {
 
         const user = result.rows[0];
 
-        // হ্যাশ করা পাসওয়ার্ডের সাথে ম্যাচ করানো
+        
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if (!isPasswordMatch) {
             return res.status(401).json({ success: false, message: "Invalid email or password" });
@@ -116,7 +116,7 @@ app.post("/api/auth/login", async (req: Request, res: Response) => {
     }
 });
 
-// অথেনটিকেশন মিডলওয়্যার
+
 const authMiddleware = (req: Request, res: Response, next: any) => {
     const authHeader = req.headers.authorization;
 
