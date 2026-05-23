@@ -15,7 +15,7 @@ const pool = new Pool({
     connectionString: "postgresql://neondb_owner:npg_YL3H2bcGIJvp@ep-raspy-scene-apdbzzye-pooler.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 });
 
-// ডাটাবেজ টেবিল স্কিমা ঠিক করা হয়েছে (created_at, updated_at দিয়ে)
+
 const initDB = async () => {
     try {
         await pool.query(`
