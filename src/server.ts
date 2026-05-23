@@ -133,12 +133,12 @@ const authMiddleware = (req: Request, res: Response, next: any) => {
     }
 };
 
-// ৩. ক্রিয়েট ইস্যু (ইনপুট ভ্যালিডেশন সহ)
+
 app.post("/api/issues", authMiddleware, async (req: any, res: Response) => {
     const { title, description, type } = req.body;
     const reporter_id = req.user.id;
 
-    // অ্যাসাইনমেন্টের শর্ত অনুযায়ী ভ্যালিডেশন
+
     if (!title || title.length > 150) {
         return res.status(400).json({ success: false, message: "Title is required and must be under 150 characters" });
     }
@@ -166,7 +166,7 @@ app.post("/api/issues", authMiddleware, async (req: any, res: Response) => {
     }
 });
 
-// ৪. গেট অল ইস্যুস (ফিল্টারিং ও ব্যাচিং সহ)
+
 app.get("/api/issues", async (req: Request, res: Response) => {
     const { sort, type, status } = req.query;
 
@@ -210,7 +210,7 @@ app.get("/api/issues", async (req: Request, res: Response) => {
     }
 });
 
-// ৫. গেট সিঙ্গেল ইস্যু
+
 app.get("/api/issues/:id", async (req: Request, res: Response) => {
     const { id } = req.params;
 
@@ -237,7 +237,7 @@ app.get("/api/issues/:id", async (req: Request, res: Response) => {
     }
 });
 
-// ৬. আপডেট ইস্যু (কন্ডিশনাল পারমিশন সহ)
+
 app.patch("/api/issues/:id", authMiddleware, async (req: any, res: Response) => {
     const { id } = req.params;
     const { title, description, type } = req.body;
@@ -282,7 +282,6 @@ app.patch("/api/issues/:id", authMiddleware, async (req: any, res: Response) => 
     }
 });
 
-// ৭. ডিলিট ইস্যু
 app.delete("/api/issues/:id", authMiddleware, async (req: any, res: Response) => {
     const { id } = req.params;
     const { role: userRole } = req.user;
