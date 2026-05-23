@@ -258,7 +258,7 @@ app.get("/api/issues/:id", async (req: Request, res: Response) => {
 
 app.patch("/api/issues/:id", authMiddleware, async (req: any, res: Response) => {
     const { id } = req.params;
-    const { title, description, type } = req.body;
+    const { title, description, type, status } = req.body; 
     const { id: userId, role: userRole } = req.user;
 
     try {
@@ -270,6 +270,7 @@ app.patch("/api/issues/:id", authMiddleware, async (req: any, res: Response) => 
 
         const issue = issueResult.rows[0];
 
+        
         if (userRole === "contributor") {
             if (issue.reporter_id !== userId) {
                 return res.status(403).json({ success: false, message: "You are not authorized to update this issue" });
@@ -277,18 +278,28 @@ app.patch("/api/issues/:id", authMiddleware, async (req: any, res: Response) => 
             if (issue.status !== "open") {
                 return res.status(403).json({ success: false, message: "Contributors can only update issues with an 'open' status" });
             }
+            if (status !== undefined) {
+                return res.status(403).json({ success: false, message: "Contributors cannot change the issue status" });
+            }
         }
 
+        
+        if (status && !['open', 'in_progress', 'resolved'].includes(status)) {
+            return res.status(400).json({ success: false, message: "Invalid status value" });
+        }
+
+     
         const updatedTitle = title !== undefined ? title : issue.title;
         const updatedDescription = description !== undefined ? description : issue.description;
         const updatedType = type !== undefined ? type : issue.type;
+        const updatedStatus = status !== undefined ? status : issue.status; 
 
         const updateResult = await pool.query(`
             UPDATE issues 
-            SET title = $1, description = $2, type = $3, updated_at = NOW() 
-            WHERE id = $4 
+            SET title = $1, description = $2, type = $3, status = $4, updated_at = NOW() 
+            WHERE id = $5 
             RETURNING id, title, description, type, status, reporter_id, created_at, updated_at
-        `, [updatedTitle, updatedDescription, updatedType, id]);
+        `, [updatedTitle, updatedDescription, updatedType, updatedStatus, id]);
 
         res.status(200).json({
             success: true,
